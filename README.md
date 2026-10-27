@@ -17,6 +17,13 @@
 * **Local File Payload Heuristic Audit:** Computes true cryptographic hashes (**SHA-256**, **SHA-1**, **MD5**) entirely inside the browser using the native **Web Crypto API** (`crypto.subtle.digest`). Evaluates file Shannon entropy to detect packed binaries or encrypted payloads.
 * **Audit Report Export:** Download structured JSON diagnostic reports with full engine telemetry.
 
+### 2. ⚡ Deep Systems & Reverse Engineering Lab
+* **PE & ELF Executable Header Parser:** Dissects DOS header, COFF header, Optional 64-bit header, Section tables (`.text`, `.rdata`, `.data`), and calculates section-by-section Shannon entropy to uncover obfuscated, encrypted, or packed malware (UPX/Themida).
+* **Interactive Canonical Hex Dump Dissector:** 16-byte memory inspector with real-time data type decoding (`uint8`, `uint16-LE`, binary bitstrings, ASCII representations).
+* **YARA Rule Compiler & Engine:** In-browser AST compiler and scanner supporting meta tags, string types (ASCII/nocase, hex wildcards `??`, regexes), and boolean evaluation conditions (`any of them`, `all of them`, `$a and $b`).
+* **x86_64 Stack Frame & Buffer Overflow Visualizer:** Step-by-step visualizer for call frames, Stack Canaries (`__stack_chk_guard`), Saved RBP, and Return Address (RIP) hijack verification with ASLR and DEP/NX mitigation toggles.
+* **Hardware Cryptography & Cipher Solver:** Hardware-accelerated AES-256-GCM authenticated encryption (100k PBKDF2 iterations), browser-generated RSA-OAEP 2048-bit keypairs with PEM export, and Index of Coincidence (IoC) + Chi-Squared statistical frequency cipher breakers.
+
 ### 2. 🔐 Cryptographic Password & Breach Defense Lab
 * **Information Entropy Analyzer:** Computes mathematical Shannon entropy in bits ($E = L \cdot \log_2(R)$) adjusted for character frequency and repetition.
 * **GPU Cluster Crack-Time Estimation:** Benchmarks resistance against high-performance password cracking clusters (e.g. 8x NVIDIA RTX 4090 hashcat rigs at 10+ Billion guesses/second).

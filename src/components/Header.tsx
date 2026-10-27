@@ -11,7 +11,8 @@ import {
   Github, 
   Menu, 
   X,
-  Bug
+  Bug,
+  Cpu
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -33,6 +34,7 @@ export const Header: React.FC<HeaderProps> = ({
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'scanner', label: 'Threat Scanner', icon: Radar },
+    { id: 'deep-lab', label: 'Systems Lab', icon: Cpu },
     { id: 'password', label: 'Password & Breach', icon: KeyRound },
     { id: 'network', label: 'Network Audit', icon: Wifi },
     { id: 'phishing', label: 'Phishing Lab', icon: FishOff },

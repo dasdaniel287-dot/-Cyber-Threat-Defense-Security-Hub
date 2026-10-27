@@ -7,6 +7,7 @@ import { NetworkAudit } from './components/NetworkAudit';
 import { PhishingLab } from './components/PhishingLab';
 import { DefenseVault } from './components/DefenseVault';
 import { CveExplorer } from './components/CveExplorer';
+import { DeepSystemsLab } from './components/DeepSystemsLab';
 import { ReportModal } from './components/ReportModal';
 import { GitHubProjectModal } from './components/GitHubProjectModal';
 import { INITIAL_THREAT_FEED, PHISHING_QUESTIONS } from './data/mockSecurityData';
@@ -79,6 +80,10 @@ export default function App() {
             onIncrementScanCount={handleIncrementScanCount}
             onBackToDashboard={() => setActiveTab('dashboard')}
           />
+        )}
+
+        {activeTab === 'deep-lab' && (
+          <DeepSystemsLab />
         )}
 
         {activeTab === 'password' && (

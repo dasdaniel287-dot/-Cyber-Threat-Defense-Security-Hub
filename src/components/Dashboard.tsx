@@ -14,7 +14,8 @@ import {
   ArrowRight,
   ExternalLink,
   Radio,
-  Bug
+  Bug,
+  Cpu
 } from 'lucide-react';
 import { ThreatFeedItem, ThreatSeverity } from '../types/security';
 
@@ -132,13 +133,22 @@ export const Dashboard: React.FC<DashboardProps> = ({
               </div>
             </div>
             <div className="hidden sm:block h-12 w-px bg-slate-800"></div>
-            <button 
-              onClick={() => onNavigate('scanner')}
-              className="px-5 py-3 bg-gradient-to-r from-[#00f0ff] to-cyan-500 text-slate-950 font-bold rounded-xl hover:brightness-110 active:scale-95 transition-all text-sm flex items-center justify-center space-x-2 shadow-lg shadow-cyan-500/25 cursor-pointer"
-            >
-              <Zap className="w-4 h-4 fill-slate-950 text-slate-950" />
-              <span>Launch Threat Scan</span>
-            </button>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <button 
+                onClick={() => onNavigate('scanner')}
+                className="px-4 py-2.5 bg-gradient-to-r from-[#00f0ff] to-cyan-500 text-slate-950 font-bold rounded-xl hover:brightness-110 active:scale-95 transition-all text-xs sm:text-sm flex items-center justify-center space-x-1.5 shadow-lg shadow-cyan-500/25 cursor-pointer"
+              >
+                <Zap className="w-4 h-4 fill-slate-950 text-slate-950" />
+                <span>Threat Scan</span>
+              </button>
+              <button 
+                onClick={() => onNavigate('deep-lab')}
+                className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 border border-cyan-400/40 text-cyan-300 font-bold rounded-xl active:scale-95 transition-all text-xs flex items-center justify-center space-x-1.5 cursor-pointer shadow-sm shadow-cyan-500/10"
+              >
+                <Cpu className="w-4 h-4 text-cyan-400" />
+                <span>Systems Lab</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
