@@ -1,0 +1,8 @@
+{
+  "name": "AegisShield | Cyber Threat Defense & Security Hub",
+  "description": "An advanced cybersecurity operations suite featuring multi-engine URL/file threat scanning, cryptographic password entropy analysis, dark web breach simulation, network privacy audits, interactive phishing training lab, and CVE vulnerability intelligence.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

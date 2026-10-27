@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AegisShield | Cyber Threat Defense & Security Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#0a0d14',
+                            card: '#111625',
+                            border: '#1e293b',
+                            primary: '#00f0ff',
+                            secondary: '#7000ff',
+                            success: '#00ff88',
+                            warning: '#ffb700',
+                            danger: '#ff0055'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0d14;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        .cyber-glow {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+        .cyber-glow-purple {
+            box-shadow: 0 0 15px rgba(112, 0, 255, 0.25);
+        }
+        .cyber-border-glow:focus-within {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            border-color: #00f0ff;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0d14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f0ff;
+        }
+        .glass-panel {
+            background: rgba(17, 22, 37, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        @keyframes pulse-scan {
+            0% { top: 0%; opacity: 0.8; }
+            50% { opacity: 0.3; }
+            100% { top: 100%; opacity: 0.8; }
+        }
+        .scanner-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00f0ff, transparent);
+            animation: pulse-scan 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyber-secondary to-cyber-primary flex items-center justify-center text-slate-950 font-bold shadow-lg shadow-cyber-primary/20">
+                        <i data-lucide="shield-check" class="w-6 h-6 stroke-[2.5]"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-bold bg-gradient-to-r from-white via-slate-200 to-cyber-primary bg-clip-text text-transparent tracking-tight">AegisShield</span>
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-cyber-primary/10 text-cyber-primary border border-cyber-primary/20 ml-2 font-mono">v3.4 SECURE</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-1">
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-cyber-primary bg-cyber-primary/10 border border-cyber-primary/30 flex items-center space-x-2">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                        <span>Dashboard</span>
+                    </button>
+                    <button onclick="switchTab('scanner')" id="nav-scanner" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all flex items-center space-x-2">
+                        <i data-lucide="radar" class="w-4 h-4"></i>
+                        <span>Threat Scanner</span>
+                    </button>
+                    <button onclick="switchTab('password')" id="nav-password" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all flex items-center space-x-2">
+                        <i data-lucide="key-round" class="w-4 h-4"></i>
+                        <span>Password & Breach</span>
+                    </button>
+                    <button onclick="switchTab('network')" id="nav-network" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all flex items-center space-x-2">
+                        <i data-lucide="wifi" class="w-4 h-4"></i>
+                        <span>Network Audit</span>
+                    </button>
+                    <button onclick="switchTab('phishing')" id="nav-phishing" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all flex items-center space-x-2">
+                        <i data-lucide="fish-off" class="w-4 h-4"></i>
+                        <span>Phishing Lab</span>
+                    </button>
+                    <button onclick="switchTab('tips')" id="nav-tips" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all flex items-center space-x-2">
+                        <i data-lucide="book-open" class="w-4 h-4"></i>
+                        <span>Defense Vault</span>
+                    </button>
+                </nav>
+
+                <!-- Quick Action Status -->
+                <div class="hidden sm:flex items-center space-x-3">
+                    <div class="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-xs">
+                        <span class="w-2 h-2 rounded-full bg-cyber-success animate-ping"></span>
+                        <span class="text-slate-300 font-mono">Realtime Shield: <strong class="text-cyber-success">ACTIVE</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- TAB 1: DASHBOARD -->
+        <section id="tab-dashboard" class="tab-content space-y-6">
+            <!-- Hero Banner -->
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-cyber-card to-slate-900 border border-slate-800 p-6 sm:p-8">
+                <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-cyber-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute right-40 -top-20 w-64 h-64 bg-cyber-secondary/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div class="space-y-3">
+                        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-cyber-primary/10 border border-cyber-primary/30 text-cyber-primary text-xs font-mono">
+                            <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
+                            <span>SYSTEM SECURITY INDEX STATUS</span>
+                        </div>
+                        <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                            Digital Perimeter: <span class="text-cyber-success">PROTECTED</span>
+                        </h1>
+                        <p class="text-slate-400 max-w-2xl text-sm sm:text-base">
+                            Real-time intelligence feed active. Monitor zero-day vulnerabilities, audit device posture, analyze links, and simulate data leak scans in one central cyber operations center.
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-4 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80">
+                        <div class="text-center">
+                            <span class="text-xs text-slate-400 uppercase font-mono block">Threat Score</span>
+                            <span class="text-3xl font-bold font-mono text-cyber-success">98.4<span class="text-xs text-slate-500">/100</span></span>
+                        </div>
+                        <div class="h-10 w-px bg-slate-800"></div>
+                        <button onclick="switchTab('scanner')" class="px-4 py-2 bg-gradient-to-r from-cyber-primary to-blue-600 text-slate-950 font-semibold rounded-lg hover:brightness-110 transition-all text-sm flex items-center space-x-2 shadow-lg shadow-cyber-primary/20">
+                            <i data-lucide="zap" class="w-4 h-4 fill-slate-950"></i>
+                            <span>Run Full Audit</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Security Metrics Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-cyber-card p-5 rounded-xl border border-slate-800 hover:border-slate-700 transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-400 text-sm font-medium">URLs & Files Scanned</span>
+                        <div class="p-2 rounded-lg bg-cyber-primary/10 text-cyber-primary">
+                            <i data-lucide="search-code" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-baseline justify-between">
+                        <span class="text-2xl font-bold font-mono text-white" id="stat-scans">1,429</span>
+                        <span class="text-xs font-mono text-cyber-success flex items-center"><i data-lucide="trending-up" class="w-3 h-3 mr-1"></i> +12% today</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-1.5 rounded-full mt-3 overflow-hidden">
+                        <div class="bg-cyber-primary h-full w-3/4"></div>
+                    </div>
+                </div>
+
+                <div class="bg-cyber-card p-5 rounded-xl border border-slate-800 hover:border-slate-700 transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-400 text-sm font-medium">Blocked Cyber Threats</span>
+                        <div class="p-2 rounded-lg bg-cyber-danger/10 text-cyber-danger">
+                            <i data-lucide="shield-x" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-baseline justify-between">
+                        <span class="text-2xl font-bold font-mono text-white">48</span>
+                        <span class="text-xs font-mono text-cyber-danger flex items-center"><i data-lucide="alert-triangle" class="w-3 h-3 mr-1"></i> 3 High Risk</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-1.5 rounded-full mt-3 overflow-hidden">
+                        <div class="bg-cyber-danger h-full w-1/4"></div>
+                    </div>
+                </div>
+
+                <div class="bg-cyber-card p-5 rounded-xl border border-slate-800 hover:border-slate-700 transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-400 text-sm font-medium">Network Protocol Status</span>
+                        <div class="p-2 rounded-lg bg-cyber-success/10 text-cyber-success">
+                            <i data-lucide="lock" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-baseline justify-between">
+                        <span class="text-2xl font-bold font-mono text-cyber-success">HTTPS / TLS 1.3</span>
+                        <span class="text-xs font-mono text-slate-400">Encrypted</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-1.5 rounded-full mt-3 overflow-hidden">
+                        <div class="bg-cyber-success h-full w-full"></div>
+                    </div>
+                </div>
+
+                <div class="bg-cyber-card p-5 rounded-xl border border-slate-800 hover:border-slate-700 transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-400 text-sm font-medium">Phishing IQ Score</span>
+                        <div class="p-2 rounded-lg bg-cyber-secondary/10 text-cyber-secondary">
+                            <i data-lucide="brain-circuit" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-baseline justify-between">
+                        <span class="text-2xl font-bold font-mono text-white" id="stat-phishing-score">-- / 5</span>
+                        <span class="text-xs font-mono text-slate-400" id="stat-phishing-label">Quiz pending</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-1.5 rounded-full mt-3 overflow-hidden">
+                        <div id="stat-phishing-bar" class="bg-cyber-secondary h-full w-0 transition-all duration-500"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Utilities Overview Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Live Security Alerts Widget -->
+                <div class="lg:col-span-2 bg-cyber-card rounded-2xl border border-slate-800 p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <i data-lucide="rss" class="w-5 h-5 text-cyber-primary"></i>
+                                <h2 class="text-lg font-bold text-white">Global Cyber Threat Feed (Simulated Realtime)</h2>
+                            </div>
+                            <span class="text-xs font-mono text-slate-400 bg-slate-900 px-2.5 py-1 rounded border border-slate-800">LIVE MONITORING</span>
+                        </div>
+                        <div class="space-y-3" id="live-threat-feed">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400 font-mono">
+                        <span>Updating via Aegis Threat Intelligence API</span>
+                        <button onclick="refreshThreatFeed()" class="text-cyber-primary hover:underline flex items-center space-x-1">
+                            <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                            <span>Refresh Feed</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Check Panel -->
+                <div class="bg-cyber-card rounded-2xl border border-slate-800 p-6 flex flex-col">
+                    <h2 class="text-lg font-bold text-white mb-2">Instant URL Quick-Check</h2>
+                    <p class="text-xs text-slate-400 mb-4">Verify link safety before clicking or sharing external domain links.</p>
+                    
+                    <div class="space-y-4 flex-grow flex flex-col justify-center">
+                        <div class="relative">
+                            <input type="text" id="dash-quick-url" placeholder="https://example-domain.com" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyber-primary transition-all font-mono">
+                        </div>
+                        <button onclick="quickScanURL()" class="w-full py-3 bg-cyber-primary/10 hover:bg-cyber-primary/20 border border-cyber-primary/40 text-cyber-primary font-semibold rounded-xl text-sm transition-all flex items-center justify-center space-x-2">
+                            <i data-lucide="shield-search" class="w-4 h-4"></i>
+                            <span>Analyze URL</span>
+                        </button>
+                        <div id="quick-url-result" class="hidden p-3 rounded-lg text-xs font-mono border"></div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-slate-800">
+                        <div class="flex items-center justify-between text-xs text-slate-400">
+                            <span>Browser Protection: <strong class="text-cyber-success">Enabled</strong></span>
+                            <span class="text-cyber-primary cursor-pointer hover:underline" onclick="switchTab('scanner')">Advanced Scanner &rarr;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: URL & FILE SAFETY SCANNER -->
+        <section id="tab-scanner" class="tab-content hidden space-y-6">
+            <div class="bg-cyber-card rounded-2xl border border-slate-800 p-6 sm:p-8">
+                <div class="max-w-3xl">
+                    <span class="text-xs font-mono text-cyber-primary uppercase tracking-wider">Multi-Engine Security Scanner</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">URL & File Threat Diagnostics</h2>
+                    <p class="text-slate-400 text-sm mt-1">Simulate deep heuristic scans, SSL certification checks, malware signatures, and reputation analysis across multiple antimalware engines.</p>
+                </div>
+
+                <!-- Toggle Selector -->
+                <div class="flex border-b border-slate-800 mt-6 mb-6">
+                    <button id="scan-mode-url-btn" onclick="toggleScanMode('url')" class="pb-3 px-4 text-sm font-semibold border-b-2 border-cyber-primary text-cyber-primary flex items-center space-x-2">
+                        <i data-lucide="link" class="w-4 h-4"></i>
+                        <span>Scan URL / Web Domain</span>
+                    </button>
+                    <button id="scan-mode-file-btn" onclick="toggleScanMode('file')" class="pb-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2">
+                        <i data-lucide="file-up" class="w-4 h-4"></i>
+                        <span>Scan Local File</span>
+                    </button>
+                </div>
+
+                <!-- URL Scan Form -->
+                <div id="scanner-url-panel" class="space-y-4">
+                    <label class="block text-xs font-mono text-slate-400">ENTER DOMAIN OR FULL TARGET URL</label>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input type="text" id="scanner-url-input" placeholder="e.g. https://secure-login-bank-verify.xyz/login" class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-cyber-primary font-mono transition-all">
+                        <button onclick="runURLScan()" class="px-6 py-3.5 bg-cyber-primary hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-sm transition-all flex items-center justify-center space-x-2 shadow-lg shadow-cyber-primary/20">
+                            <i data-lucide="scan" class="w-4 h-4"></i>
+                            <span>Scan Target</span>
+                        </button>
+                    </div>
+                    <div class="flex flex-wrap gap-2 pt-2">
+                        <span class="text-xs text-slate-500">Test presets:</span>
+                        <button onclick="presetURL('https://google.com')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded font-mono">Safe Domain</button>
+                        <button onclick="presetURL('http://free-crypto-giveaway-winner.xyz/login')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded font-mono">Suspicious Phishing</button>
+                        <button onclick="presetURL('http://malware-download-drop.temp-site.net/payload.exe')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded font-mono">Malware Drop</button>
+                    </div>
+                </div>
+
+                <!-- File Scan Form (Hidden by default) -->
+                <div id="scanner-file-panel" class="hidden space-y-4">
+                    <label class="block text-xs font-mono text-slate-400">UPLOAD OR DRAG FILE FOR HEURISTIC AUDIT</label>
+                    <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-cyber-primary rounded-2xl p-8 text-center bg-slate-900/50 cursor-pointer transition-all">
+                        <i data-lucide="cloud-upload" class="w-10 h-10 text-slate-500 mx-auto mb-3"></i>
+                        <p class="text-sm font-semibold text-slate-300">Click to upload file or drag & drop</p>
+                        <p class="text-xs text-slate-500 mt-1">Supports EXE, ZIP, PDF, DOCX, APK (Max 100MB simulation)</p>
+                        <input type="file" id="file-input" class="hidden" onchange="handleFileSelect(event)">
+                    </div>
+                    <div id="file-info" class="hidden bg-slate-900 p-3 rounded-lg border border-slate-800 flex justify-between items-center text-sm">
+                        <div class="flex items-center space-x-3">
+                            <i data-lucide="file text-cyber-primary" class="w-5 h-5"></i>
+                            <div>
+                                <p id="file-name" class="font-mono text-white text-xs"></p>
+                                <p id="file-size" class="text-xs text-slate-500 font-mono"></p>
+                            </div>
+                        </div>
+                        <button onclick="runFileScan()" class="px-4 py-2 bg-cyber-primary text-slate-950 font-bold rounded-lg text-xs hover:bg-cyan-400">Scan File</button>
+                    </div>
+                </div>
+
+                <!-- Scan Progress Bar Simulation -->
+                <div id="scan-progress-box" class="hidden mt-8 space-y-3 bg-slate-900/80 p-6 rounded-xl border border-slate-800 relative overflow-hidden">
+                    <div class="scanner-line"></div>
+                    <div class="flex justify-between items-center text-sm font-mono">
+                        <span class="text-cyber-primary flex items-center space-x-2">
+                            <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+                            <span id="scan-status-text">Initializing scanning engines...</span>
+                        </span>
+                        <span class="text-slate-400" id="scan-percent font-bold">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div id="scan-progress-bar" class="bg-gradient-to-r from-cyber-primary to-cyber-secondary h-full w-0 transition-all duration-300"></div>
+                    </div>
+                    <div class="text-xs font-mono text-slate-500 grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2" id="engine-status-list">
+                        <div>SSL Audit: <span class="text-slate-400">Pending</span></div>
+                        <div>Blacklist Check: <span class="text-slate-400">Pending</span></div>
+                        <div>Heuristics: <span class="text-slate-400">Pending</span></div>
+                        <div>Sandbox Test: <span class="text-slate-400">Pending</span></div>
+                    </div>
+                </div>
+
+                <!-- Scan Results Container -->
+                <div id="scan-result-card" class="hidden mt-8 p-6 rounded-xl border space-y-4">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: PASSWORD STRENGTH & BREACH CHECKER -->
+        <section id="tab-password" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Left: Password Strength Evaluator -->
+                <div class="lg:col-span-7 bg-cyber-card rounded-2xl border border-slate-800 p-6 sm:p-8 space-y-6">
+                    <div>
+                        <span class="text-xs font-mono text-cyber-primary uppercase">Cryptographic Audit</span>
+                        <h2 class="text-2xl font-bold text-white mt-1">Password Strength & Entropy Analyzer</h2>
+                        <p class="text-slate-400 text-sm mt-1">Check crack resistance time against GPU cluster dictionary and brute-force attacks.</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="relative">
+                            <input type="password" id="pass-input" oninput="analyzePassword()" placeholder="Enter test password..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3.5 pr-12 text-sm text-white font-mono focus:outline-none focus:border-cyber-primary transition-all">
+                            <button onclick="togglePassVisibility()" class="absolute right-3 top-3.5 text-slate-400 hover:text-white">
+                                <i data-lucide="eye" id="pass-toggle-icon" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+
+                        <!-- Password Quality Gauge Bar -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs font-mono">
+                                <span class="text-slate-400">SECURITY SCORE</span>
+                                <span id="pass-score-label" class="text-slate-500 font-bold">EMPTY</span>
+                            </div>
+                            <div class="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden p-0.5 border border-slate-800">
+                                <div id="pass-strength-bar" class="h-full rounded-full w-0 transition-all duration-300 bg-slate-700"></div>
+                            </div>
+                        </div>
+
+                        <!-- Metrics Grid -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
+                            <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800 text-center">
+                                <span class="text-xs text-slate-400 block font-mono">Estimated Crack Time</span>
+                                <span id="crack-time" class="text-sm font-bold font-mono text-white mt-1 block">Instant</span>
+                            </div>
+                            <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800 text-center">
+                                <span class="text-xs text-slate-400 block font-mono">Entropy</span>
+                                <span id="pass-entropy" class="text-sm font-bold font-mono text-cyber-primary mt-1 block">0 bits</span>
+                            </div>
+                            <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800 text-center col-span-2 sm:col-span-1">
+                                <span class="text-xs text-slate-400 block font-mono">Length</span>
+                                <span id="pass-length" class="text-sm font-bold font-mono text-white mt-1 block">0 chars</span>
+                            </div>
+                        </div>
+
+                        <!-- Requirements Checklist -->
+                        <div class="grid grid-cols-2 gap-2 text-xs font-mono pt-2">
+                            <div id="rule-len" class="flex items-center space-x-2 text-slate-500"><i data-lucide="circle-x" class="w-4 h-4"></i><span>At least 12 characters</span></div>
+                            <div id="rule-num" class="flex items-center space-x-2 text-slate-500"><i data-lucide="circle-x" class="w-4 h-4"></i><span>Contains Numbers (0-9)</span></div>
+                            <div id="rule-sym" class="flex items-center space-x-2 text-slate-500"><i data-lucide="circle-x" class="w-4 h-4"></i><span>Contains Symbols (!@#$)</span></div>
+                            <div id="rule-case" class="flex items-center space-x-2 text-slate-500"><i data-lucide="circle-x" class="w-4 h-4"></i><span>Mixed Upper & Lower</span></div>
+                        </div>
+
+                        <!-- Generator Tool -->
+                        <div class="pt-4 border-t border-slate-800">
+                            <button onclick="generateStrongPassword()" class="w-full py-3 bg-cyber-secondary/20 hover:bg-cyber-secondary/30 border border-cyber-secondary/50 text-cyber-secondary font-semibold rounded-xl text-sm transition-all flex items-center justify-center space-x-2">
+                                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                                <span>Generate High-Entropy Password</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Email Breach Simulator -->
+                <div class="lg:col-span-5 bg-cyber-card rounded-2xl border border-slate-800 p-6 sm:p-8 space-y-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-2 text-cyber-warning">
+                            <i data-lucide="database-zap" class="w-5 h-5"></i>
+                            <span class="text-xs font-mono uppercase tracking-wider">Dark Web Leak Simulator</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-white mt-1">Data Breach Detection</h2>
+                        <p class="text-slate-400 text-sm mt-1">Simulate scanning compromised credential dumps and dark web database leaks for your identity.</p>
+
+                        <div class="mt-6 space-y-4">
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-2">EMAIL ADDRESS OR USERNAME</label>
+                                <input type="email" id="breach-email" placeholder="user@domain.com" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white font-mono focus:outline-none focus:border-cyber-primary transition-all">
+                            </div>
+                            <button onclick="checkDataBreach()" class="w-full py-3 bg-cyber-warning/10 hover:bg-cyber-warning/20 border border-cyber-warning/40 text-cyber-warning font-semibold rounded-xl text-sm transition-all flex items-center justify-center space-x-2">
+                                <i data-lucide="search" class="w-4 h-4"></i>
+                                <span>Check Breach Archives</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Breach Result Box -->
+                    <div id="breach-result font-mono" class="hidden p-4 rounded-xl border text-xs space-y-2">
+                        <!-- Populated JS -->
+                    </div>
+
+                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800 text-xs text-slate-400 space-y-1">
+                        <span class="text-slate-300 font-semibold block mb-1"><i data-lucide="shield-alert" class="w-3.5 h-3.5 inline mr-1 text-cyber-primary"></i> Note on Data Privacy</span>
+                        <p>We do not log or store typed passwords or emails. All entropy computations and hash comparisons take place locally in your web client.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: NETWORK SECURITY DIAGNOSTIC -->
+        <section id="tab-network" class="tab-content hidden space-y-6">
+            <div class="bg-cyber-card rounded-2xl border border-slate-800 p-6 sm:p-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-mono text-cyber-primary uppercase">Client Connection Posture</span>
+                        <h2 class="text-2xl font-bold text-white mt-1">Network Security Diagnostic Test</h2>
+                        <p class="text-slate-400 text-sm mt-1">Audit active connection security, client IP metadata, WebRTC leak status, and protocol encryption integrity.</p>
+                    </div>
+                    <button onclick="runNetworkDiagnostics()" class="px-5 py-3 bg-cyber-primary text-slate-950 font-bold rounded-xl text-sm hover:bg-cyan-400 transition-all flex items-center space-x-2 shadow-lg shadow-cyber-primary/20">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                        <span>Run Full Diagnostic</span>
+                    </button>
+                </div>
+
+                <!-- Network Diagnostics Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                    <!-- Card 1: IP & Location Info -->
+                    <div class="bg-slate-900/70 p-5 rounded-xl border border-slate-800 space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-mono text-slate-400">PUBLIC ADAPTER INFO</span>
+                            <i data-lucide="globe" class="w-4 h-4 text-cyber-primary"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs text-slate-500 block">Detected Public IP</span>
+                            <span id="net-ip" class="text-lg font-mono font-bold text-white">192.0.2.145 <span class="text-xs text-cyber-primary">(Simulated)</span></span>
+                        </div>
+                        <div class="pt-2 border-t border-slate-800 text-xs space-y-1 font-mono text-slate-400">
+                            <div>Protocol: <span class="text-slate-200">IPv4 / TLS 1.3</span></div>
+                            <div>DNS Server: <span class="text-slate-200">1.1.1.1 (Encrypted Cloudflare)</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: WebRTC Leak Status -->
+                    <div class="bg-slate-900/70 p-5 rounded-xl border border-slate-800 space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-mono text-slate-400">WEBRTC PRIVACY TEST</span>
+                            <i data-lucide="eye-off" class="w-4 h-4 text-cyber-success"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs text-slate-500 block">Local IP Leak Status</span>
+                            <span id="net-webrtc" class="text-lg font-mono font-bold text-cyber-success">PASSED (No Leak)</span>
+                        </div>
+                        <div class="pt-2 border-t border-slate-800 text-xs space-y-1 font-mono text-slate-400">
+                            <div>STUN Requests: <span class="text-slate-200">Filtered</span></div>
+                            <div>Internal IPv4: <span class="text-slate-200">Hidden / Protected</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Connection Encryption -->
+                    <div class="bg-slate-900/70 p-5 rounded-xl border border-slate-800 space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-mono text-slate-400">TRANSPORT LAYER SECURITY</span>
+                            <i data-lucide="shield-check" class="w-4 h-4 text-cyber-primary"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs text-slate-500 block">HTTP Strict Transport (HSTS)</span>
+                            <span id="net-hsts" class="text-lg font-mono font-bold text-cyber-success">ACTIVE & ENFORCED</span>
+                        </div>
+                        <div class="pt-2 border-t border-slate-800 text-xs space-y-1 font-mono text-slate-400">
+                            <div>Cipher Suite: <span class="text-slate-200">AES-256-GCM</span></div>
+                            <div>Cert Authority: <span class="text-slate-200">Trusted Global Root</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulated Firewall & Port Check Console -->
+                <div class="mt-6 bg-slate-950 p-5 rounded-xl border border-slate-800 font-mono text-xs">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+                        <span class="text-slate-400 flex items-center space-x-2">
+                            <i data-lucide="terminal" class="w-4 h-4 text-cyber-primary"></i>
+                            <span>Port Scan & Firewall Integrity Console</span>
+                        </span>
+                        <span class="text-cyber-success text-[10px] bg-cyber-success/10 px-2 py-0.5 rounded border border-cyber-success/30">AUDIT COMPLETE</span>
+                    </div>
+                    <div id="net-console-output" class="space-y-1.5 text-slate-300">
+                        <div>[0.00s] Testing Port 80 (HTTP) ... <span class="text-cyber-warning">Redirected to 443 (Secure)</span></div>
+                        <div>[0.12s] Testing Port 443 (HTTPS) ... <span class="text-cyber-success">OPEN (TLS 1.3 Active)</span></div>
+                        <div>[0.25s] Testing Port 22 (SSH Remote Access) ... <span class="text-cyber-success">CLOSED / FILTERED (Secure)</span></div>
+                        <div>[0.38s] Testing Port 3389 (RDP Remote Desktop) ... <span class="text-cyber-success">BLOCKED BY FIREWALL</span></div>
+                        <div>[0.50s] DNS Spoofing Protection Audit ... <span class="text-cyber-success">DNSSEC Validated</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: PHISHING DETECTION QUIZ LAB -->
+        <section id="tab-phishing" class="tab-content hidden space-y-6">
+            <div class="bg-cyber-card rounded-2xl border border-slate-800 p-6 sm:p-8">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <span class="text-xs font-mono text-cyber-secondary uppercase">Interactive Cyber Training</span>
+                        <h2 class="text-2xl font-bold text-white mt-1">Phishing & Social Engineering Simulator</h2>
+                        <p class="text-slate-400 text-sm mt-1">Train your eye to spot deceptive emails, malicious URLs, domain typosquatting, and fake login portals.</p>
+                    </div>
+                    <div class="bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 text-center font-mono">
+                        <span class="text-xs text-slate-400 block">CURRENT SCORE</span>
+                        <span id="quiz-score" class="text-xl font-bold text-cyber-primary">0 / 0</span>
+                    </div>
+                </div>
+
+                <!-- Quiz Card Box -->
+                <div id="quiz-container" class="mt-8 space-y-6">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 6: CYBERSECURITY TIPS & BEST PRACTICES VAULT -->
+        <section id="tab-tips" class="tab-content hidden space-y-6">
+            <div class="bg-cyber-card rounded-2xl border border-slate-800 p-6 sm:p-8">
+                <div>
+                    <span class="text-xs font-mono text-cyber-primary uppercase">Security Knowledge Vault</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">Interactive Defense Guides & Best Practices</h2>
+                    <p class="text-slate-400 text-sm mt-1">Actionable countermeasures to harden your digital life against ransomware, account takeovers, and surveillance.</p>
+                </div>
+
+                <!-- Tips Categories & Accordion -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                    <!-- Guide 1: Identity & 2FA -->
+                    <div class="bg-slate-900/60 p-6 rounded-xl border border-slate-800 hover:border-cyber-primary/40 transition-all space-y-4">
+                        <div class="flex items-center space-x-3 text-cyber-primary">
+                            <div class="p-2.5 rounded-lg bg-cyber-primary/10">
+                                <i data-lucide="fingerprint" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-white">Multi-Factor Authentication (MFA/2FA)</h3>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Passwords alone are no longer enough. Enabling 2FA adds an essential second layer of defense against credential stuffing attacks.
+                        </p>
+                        <ul class="text-xs text-slate-400 space-y-2 font-mono">
+                            <li class="flex items-start space-x-2">
+                                <i data-lucide="check" class="w-4 h-4 text-cyber-success shrink-0 mt-0.5"></i>
+                                <span>Prefer Hardware Keys (YubiKey) or Authenticator Apps (TOTP) over SMS.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i data-lucide="check" class="w-4 h-4 text-cyber-success shrink-0 mt-0.5"></i>
+                                <span>Always store offline physical backup codes in a secure, fireproof location.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Guide 2: Network & Public Wi-Fi -->
+                    <div class="bg-slate-900/60 p-6 rounded-xl border border-slate-800 hover:border-cyber-primary/40 transition-all space-y-4">
+                        <div class="flex items-center space-x-3 text-cyber-secondary">
+                            <div class="p-2.5 rounded-lg bg-cyber-secondary/10">
+                                <i data-lucide="wifi-off" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-white">Public Wi-Fi & VPN Defense</h3>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Open Wi-Fi networks in airports or cafes are vulnerable to Man-In-The-Middle (MITM) eavesdropping and packet injection.
+                        </p>
+                        <ul class="text-xs text-slate-400 space-y-2 font-mono">
+                            <li class="flex items-start space-x-2">
+                                <i data-lucide="check" class="w-4 h-4 text-cyber-success shrink-0 mt-0.5"></i>
+                                <span>Always use an encrypted WireGuard/OpenVPN connection on untrusted Wi-Fi.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i data-lucide="check" class="w-4 h-4 text-cyber-success shrink-0 mt-0.5"></i>
+                                <span>Disable automatic network auto-connect settings on mobile devices.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Guide 3: Malware & Zero-Day Patching -->
+                    <div class="bg-slate-900/60 p-6 rounded-xl border border-slate-800 hover:border-cyber-primary/40 transition-all space-y-4">
+                        <div class="flex items-center space-x-3 text-cyber-warning">
+                            <div class="p-2.5 rounded-lg bg-cyber-warning/10">
+                                <i data-lucide="shield-alert" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-white">Software Hardening & Patching</h3>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Unpatched operating systems and outdated web browsers remain the #1 vector for drive-by malware exploits.
+                        </p>
+                        <ul class="text-xs text-slate-400 space-y-2 font-mono">
+                            <li class="flex items-start space-x-2">
+                                <i data-lucide="check" class="w-4 h-4 text-cyber-success shrink-0 mt-0.5"></i>
+                                <span>Enable automatic security updates for OS, Browsers, and Router firmware.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i data-lucide="check" class="w-4 h-4 text-cyber-success shrink-0 mt-0.5"></i>
+                                <span>Remove unused browser extensions which often get sold and turned into spyware.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Guide 4: Data Backups 3-2-1 Rule -->
+                    <div class="bg-slate-900/60 p-6 rounded-xl border border-slate-800 hover:border-cyber-primary/40 transition-all space-y-4">
+                        <div class="flex items-center space-x-3 text-cyber-success">
+                            <div class="p-2.5 rounded-lg bg-cyber-success/10">
+                                <i data-lucide="hard-drive" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-white">Ransomware Immunity: 3-2-1 Backups</h3>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Protects your critical documents against ransomware encryption and catastrophic disk failure.
+                        </p>
+                        <ul class="text-xs text-slate-400 space-y-2 font-mono">
+                            <li class="flex items-start space-x-2">
+                                <i data-lucide="check" class="w-4 h-4 text-cyber-success shrink-0 mt-0.5"></i>
+                                <span>Keep <strong>3</strong> copies of data on <strong>2</strong> different media types, with <strong>1</strong> copy completely offline (air-gapped).</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i data-lucide="check" class="w-4 h-4 text-cyber-success shrink-0 mt-0.5"></i>
+                                <span>Periodically test backup restoration to ensure data integrity.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-800 bg-slate-950/80 py-6 text-xs text-slate-500 font-mono">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-2">
+                <i data-lucide="shield text-cyber-primary" class="w-4 h-4"></i>
+                <span>AegisShield Internet Security Platform &copy; 2026. All Rights Reserved.</span>
+            </div>
+            <div class="flex space-x-6">
+                <a href="#" class="hover:text-cyber-primary transition-colors">Privacy Policy</a>
+                <a href="#" class="hover:text-cyber-primary transition-colors">Threat Database</a>
+                <a href="#" class="hover:text-cyber-primary transition-colors">API Docs</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Initialize Lucide Icons
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            refreshThreatFeed();
+            initQuiz();
+        });
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Remove active states from nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-cyber-primary', 'bg-cyber-primary/10', 'border', 'border-cyber-primary/30');
+                btn.classList.add('text-slate-400');
+            });
+
+            // Show target tab
+            const targetTab = document.getElementById(`tab-${tabId}`);
+            if (targetTab) {
+                targetTab.classList.remove('hidden');
+            }
+
+            // Highlight active nav item
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) {
+                activeNav.classList.remove('text-slate-400');
+                activeNav.classList.add('text-cyber-primary', 'bg-cyber-primary/10', 'border', 'border-cyber-primary/30');
+            }
+        }
+
+        // Live Threat Feed Data Generator
+        const threatSamples = [
+            { type: 'Phishing Target', target: 'login-update-paypal-support.net', level: 'HIGH', status: 'Blocked' },
+            { type: 'Malware Variant', target: 'Trojan.Win32.AgentTesla', level: 'CRITICAL', status: 'Quarantined' },
+            { type: 'Ransomware C2', target: 'c2-server-109.onion.link', level: 'CRITICAL', status: 'Blacklisted' },
+            { type: 'Expired SSL Cert', target: 'api-internal-gateway.org', level: 'LOW', status: 'Warning' },
+            { type: 'Zero-Day Exploit', target: 'CVE-2026-9812 Chrome V8 Parser', level: 'HIGH', status: 'Patched' }
+        ];
+
+        function refreshThreatFeed() {
+            const feedContainer = document.getElementById('live-threat-feed');
+            feedContainer.innerHTML = '';
+
+            // Shuffle and pick 4
+            const shuffled = [...threatSamples].sort(() => 0.5 - Math.random()).slice(0, 4);
+
+            shuffled.forEach(item => {
+                const colorClass = item.level === 'CRITICAL' ? 'text-cyber-danger border-cyber-danger/30 bg-cyber-danger/10' :
+                                   item.level === 'HIGH' ? 'text-cyber-warning border-cyber-warning/30 bg-cyber-warning/10' :
+                                   'text-cyber-primary border-cyber-primary/30 bg-cyber-primary/10';
+
+                const html = `
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono">
+                        <div class="flex items-center space-x-3">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${colorClass}">${item.level}</span>
+                            <div>
+                                <span class="text-white font-semibold block">${item.target}</span>
+                                <span class="text-slate-500">${item.type}</span>
+                            </div>
+                        </div>
+                        <span class="text-cyber-success bg-cyber-success/10 border border-cyber-success/20 px-2.5 py-1 rounded-md text-[11px]">${item.status}</span>
+                    </div>
+                `;
+                feedContainer.innerHTML += html;
+            });
+        }
+
+        // Quick Scan URL Dashboard
+        function quickScanURL() {
+            const input = document.getElementById('dash-quick-url').value.trim();
+            const resBox = document.getElementById('quick-url-result');
+            
+            if (!input) {
+                resBox.className = "p-3 rounded-lg text-xs font-mono border bg-cyber-warning/10 border-cyber-warning/30 text-cyber-warning block";
+                resBox.innerText = "Please enter a valid URL to analyze.";
+                return;
+            }
+
+            resBox.className = "p-3 rounded-lg text-xs font-mono border bg-slate-900 border-slate-800 text-slate-300 block";
+            resBox.innerText = "Analyzing target URL reputation...";
+
+            setTimeout(() => {
+                const isSuspicious = input.includes('crypto') || input.includes('winner') || input.includes('.xyz') || input.includes('login');
+                if (isSuspicious) {
+                    resBox.className = "p-3 rounded-lg text-xs font-mono border bg-cyber-danger/10 border-cyber-danger/30 text-cyber-danger block";
+                    resBox.innerText = "⚠️ DANGER: Target URL flagged for potential phishing / deceptive practices!";
+                } else {
+                    resBox.className = "p-3 rounded-lg text-xs font-mono border bg-cyber-success/10 border-cyber-success/30 text-cyber-success block";
+                    resBox.innerText = "✓ SAFE: No known malware or phishing signatures detected for this domain.";
+                }
+            }, 800);
+        }
+
+        // Threat Scanner Functionality
+        function toggleScanMode(mode) {
+            const urlBtn = document.getElementById('scan-mode-url-btn');
+            const fileBtn = document.getElementById('scan-mode-file-btn');
+            const urlPanel = document.getElementById('scanner-url-panel');
+            const filePanel = document.getElementById('scanner-file-panel');
+
+            if (mode === 'url') {
+                urlBtn.className = "pb-3 px-4 text-sm font-semibold border-b-2 border-cyber-primary text-cyber-primary flex items-center space-x-2";
+                fileBtn.className = "pb-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2";
+                urlPanel.classList.remove('hidden');
+                filePanel.classList.add('hidden');
+            } else {
+                fileBtn.className = "pb-3 px-4 text-sm font-semibold border-b-2 border-cyber-primary text-cyber-primary flex items-center space-x-2";
+                urlBtn.className = "pb-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2";
+                filePanel.classList.remove('hidden');
+                urlPanel.classList.add('hidden');
+            }
+        }
+
+        function presetURL(url) {
+            document.getElementById('scanner-url-input').value = url;
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('file-name').innerText = file.name;
+                document.getElementById('file-size').innerText = `${(file.size / 1024).toFixed(1)} KB`;
+                document.getElementById('file-info').classList.remove('hidden');
+            }
+        }
+
+        // Add drag & drop event triggers for drop zone
+        const dropZone = document.getElementById('drop-zone');
+        if (dropZone) {
+            dropZone.addEventListener('click', () => document.getElementById('file-input').click());
+        }
+
+        function runURLScan() {
+            const target = document.getElementById('scanner-url-input').value.trim();
+            if (!target) return;
+
+            executeScanSimulation(target, 'URL Target');
+        }
+
+        function runFileScan() {
+            const fileName = document.getElementById('file-name').innerText || 'Uploaded_Sample.bin';
+            executeScanSimulation(fileName, 'File Payload');
+        }
+
+        function executeScanSimulation(targetName, scanType) {
+            const progressBox = document.getElementById('scan-progress-box');
+            const progressBar = document.getElementById('scan-progress-bar');
+            const statusText = document.getElementById('scan-status-text');
+            const resultCard = document.getElementById('scan-result-card');
+
+            progressBox.classList.remove('hidden');
+            resultCard.classList.add('hidden');
+            progressBar.style.width = '0%';
+
+            let percent = 0;
+            const interval = setInterval(() => {
+                percent += 20;
+                progressBar.style.width = `${percent}%`;
+
+                if (percent === 40) statusText.innerText = 'Querying global threat intelligence databases...';
+                if (percent === 70) statusText.innerText = 'Executing heuristic malware signature analysis...';
+                if (percent === 90) statusText.innerText = 'Finalizing diagnostic report...';
+
+                if (percent >= 100) {
+                    clearInterval(interval);
+                    progressBox.classList.add('hidden');
+                    renderScanResults(targetName, scanType);
+                }
+            }, 300);
+        }
+
+        function renderScanResults(target, scanType) {
+            const resultCard = document.getElementById('scan-result-card');
+            resultCard.classList.remove('hidden');
+
+            const isRisky = target.includes('crypto') || target.includes('exe') || target.includes('winner') || target.includes('temp-site');
+
+            if (isRisky) {
+                resultCard.className = "mt-8 p-6 rounded-xl border border-cyber-danger/40 bg-cyber-danger/5 space-y-4";
+                resultCard.innerHTML = `
+                    <div class="flex items-center space-x-3 text-cyber-danger">
+                        <i data-lucide="shield-alert" class="w-7 h-7"></i>
+                        <div>
+                            <h3 class="font-bold text-lg text-white">Threat Alert Detected!</h3>
+                            <p class="text-xs font-mono text-cyber-danger">High probability of malicious intent</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/80 p-4 rounded-lg font-mono text-xs space-y-2 border border-slate-800">
+                        <div class="text-slate-300">Target Analyzed: <span class="text-white">${target}</span></div>
+                        <div class="text-slate-300">Scanner Engine Hits: <span class="text-cyber-danger font-bold">14 / 68 Engines Flagged Malicious</span></div>
+                        <div class="text-slate-300">Threat Classification: <span class="text-cyber-warning">Phishing / Suspicious Binary</span></div>
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button onclick="switchTab('dashboard')" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-lg text-xs hover:bg-slate-700">Back to Dashboard</button>
+                    </div>
+                `;
+            } else {
+                resultCard.className = "mt-8 p-6 rounded-xl border border-cyber-success/40 bg-cyber-success/5 space-y-4";
+                resultCard.innerHTML = `
+                    <div class="flex items-center space-x-3 text-cyber-success">
+                        <i data-lucide="shield-check" class="w-7 h-7"></i>
+                        <div>
+                            <h3 class="font-bold text-lg text-white">Target Clean & Verified</h3>
+                            <p class="text-xs font-mono text-cyber-success">No malicious signatures or anomalies detected</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/80 p-4 rounded-lg font-mono text-xs space-y-2 border border-slate-800">
+                        <div class="text-slate-300">Target Analyzed: <span class="text-white">${target}</span></div>
+                        <div class="text-slate-300">Scanner Engine Hits: <span class="text-cyber-success font-bold">0 / 68 Flagged (Clean)</span></div>
+                        <div class="text-slate-300">SSL Certificate: <span class="text-cyber-success">Valid (Issued by Trusted CA)</span></div>
+                    </div>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        // Password Strength & Entropy Logic
+        function togglePassVisibility() {
+            const input = document.getElementById('pass-input');
+            const icon = document.getElementById('pass-toggle-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                input.type = 'password';
+                icon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        }
+
+        function analyzePassword() {
+            const pass = document.getElementById('pass-input').value;
+            const bar = document.getElementById('pass-strength-bar');
+            const label = document.getElementById('pass-score-label');
+            const crackTime = document.getElementById('crack-time');
+            const entropyEl = document.getElementById('pass-entropy');
+            const lengthEl = document.getElementById('pass-length');
+
+            lengthEl.innerText = `${pass.length} chars`;
+
+            // Rules
+            const hasLen = pass.length >= 12;
+            const hasNum = /\d/.test(pass);
+            const hasSym = /[^a-zA-Z0-9]/.test(pass);
+            const hasCase = /[a-z]/.test(pass) && /[A-Z]/.test(pass);
+
+            updateRuleIcon('rule-len', hasLen);
+            updateRuleIcon('rule-num', hasNum);
+            updateRuleIcon('rule-sym', hasSym);
+            updateRuleIcon('rule-case', hasCase);
+
+            if (!pass) {
+                bar.style.width = '0%';
+                label.innerText = 'EMPTY';
+                label.className = 'text-slate-500 font-bold';
+                crackTime.innerText = 'Instant';
+                entropyEl.innerText = '0 bits';
+                return;
+            }
+
+            // Calculate Entropy
+            let poolSize = 0;
+            if (/[a-z]/.test(pass)) poolSize += 26;
+            if (/[A-Z]/.test(pass)) poolSize += 26;
+            if (/\d/.test(pass)) poolSize += 10;
+            if (/[^a-zA-Z0-9]/.test(pass)) poolSize += 32;
+
+            const entropy = Math.floor(pass.length * Math.log2(poolSize || 1));
+            entropyEl.innerText = `${entropy} bits`;
+
+            // Score evaluation
+            let score = 0;
+            if (pass.length > 6) score += 20;
+            if (pass.length >= 12) score += 30;
+            if (hasNum) score += 15;
+            if (hasSym) score += 20;
+            if (hasCase) score += 15;
+
+            bar.style.width = `${Math.min(score, 100)}%`;
+
+            if (score < 40) {
+                label.innerText = 'WEAK';
+                label.className = 'text-cyber-danger font-bold';
+                bar.className = 'h-full rounded-full transition-all duration-300 bg-cyber-danger';
+                crackTime.innerText = '< 5 Seconds';
+            } else if (score < 75) {
+                label.innerText = 'MODERATE';
+                label.className = 'text-cyber-warning font-bold';
+                bar.className = 'h-full rounded-full transition-all duration-300 bg-cyber-warning';
+                crackTime.innerText = '3 Weeks';
+            } else {
+                label.innerText = 'CRYPTO-STRONG';
+                label.className = 'text-cyber-success font-bold';
+                bar.className = 'h-full rounded-full transition-all duration-300 bg-cyber-success';
+                crackTime.innerText = '4,000+ Years';
+            }
+        }
+
+        function updateRuleIcon(elementId, isValid) {
+            const el = document.getElementById(elementId);
+            if (isValid) {
+                el.className = 'flex items-center space-x-2 text-cyber-success';
+                el.children[0].setAttribute('data-lucide', 'circle-check');
+            } else {
+                el.className = 'flex items-center space-x-2 text-slate-500';
+                el.children[0].setAttribute('data-lucide', 'circle-x');
+            }
+            lucide.createIcons();
+        }
+
+        function generateStrongPassword() {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=";
+            let pass = "";
+            for (let i = 0; i < 16; i++) {
+                pass += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            const input = document.getElementById('pass-input');
+            input.value = pass;
+            input.type = 'text';
+            analyzePassword();
+        }
+
+        function checkDataBreach() {
+            const email = document.getElementById('breach-email').value.trim();
+            const resBox = document.getElementById('breach-result font-mono');
+            if (!email) return;
+
+            resBox.classList.remove('hidden');
+            resBox.className = "p-4 rounded-xl border bg-slate-900 border-slate-800 text-slate-300 text-xs space-y-2";
+            resBox.innerText = "Querying dark web breach databases...";
+
+            setTimeout(() => {
+                if (email.includes('test') || email.includes('admin') || email.includes('pwned')) {
+                    resBox.className = "p-4 rounded-xl border bg-cyber-danger/10 border-cyber-danger/40 text-cyber-danger text-xs space-y-2";
+                    resBox.innerHTML = `
+                        <div class="font-bold flex items-center space-x-2">
+                            <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                            <span>BREACH DETECTED IN 3 DATA LEAKS</span>
+                        </div>
+                        <p class="text-slate-300">Found in: <em>Collection#1 (2019), Canva Data Leak (2019), Marketing Dumps (2022)</em>.</p>
+                        <p class="text-xs text-cyber-warning">Recommendation: Immediately change passwords for associated online services!</p>
+                    `;
+                } else {
+                    resBox.className = "p-4 rounded-xl border bg-cyber-success/10 border-cyber-success/40 text-cyber-success text-xs space-y-2";
+                    resBox.innerHTML = `
+                        <div class="font-bold flex items-center space-x-2">
+                            <i data-lucide="shield-check" class="w-4 h-4"></i>
+                            <span>NO BREACHES FOUND</span>
+                        </div>
+                        <p class="text-slate-300">Email target does not appear in known publicly leaked database dumps.</p>
+                    `;
+                }
+                lucide.createIcons();
+            }, 700);
+        }
+
+        // Network Diagnostics Functionality
+        function runNetworkDiagnostics() {
+            const consoleOut = document.getElementById('net-console-output');
+            consoleOut.innerHTML = `<div>[0.00s] Refreshing active socket diagnostics...</div>`;
+            
+            setTimeout(() => {
+                consoleOut.innerHTML += `<div>[0.15s] Testing TLS handshake cipher speed ... <span class="text-cyber-success font-bold">OPTIMAL (12ms)</span></div>`;
+                consoleOut.innerHTML += `<div>[0.30s] Verifying DNSSEC Signature integrity ... <span class="text-cyber-success font-bold">PASSED</span></div>`;
+                consoleOut.innerHTML += `<div>[0.45s] Checking IPv6 fallback tunneling ... <span class="text-cyber-primary">SECURE</span></div>`;
+            }, 400);
+        }
+
+        // Phishing Quiz Logic
+        const quizQuestions = [
+            {
+                sender: "Security Alert <support@paypaI-security-update.com>",
+                subject: "URGENT: Your Account Has Been Locked!",
+                body: "Dear Customer, We detected an unauthorized login attempt from Russia. Click the link below immediately to verify your identity within 24 hours or your account will be suspended.",
+                isPhishing: true,
+                explanation: "Phishing! Notice the sneaky typosquatted domain 'paypaI' (with a capital 'I' instead of 'l') and the artificial sense of extreme urgency."
+            },
+            {
+                sender: "GitHub <noreply@github.com>",
+                subject: "[GitHub] Security advisory notification",
+                body: "A new security vulnerability was reported in a repository you contribute to. Please review the advisory details directly in your repository settings dashboard.",
+                isPhishing: false,
+                explanation: "Legitimate email! The sender domain is official (@github.com) and it instructs you to navigate directly to your own dashboard rather than urging a suspicious external click."
+            },
+            {
+                sender: "IT Helpdesk <admin-support-desk@internal-corp-portal.xyz>",
+                subject: "Mandatory Password Reset Required",
+                body: "Attention Staff, Our IT department is upgrading all company databases today. Please submit your current username and password in this form to avoid locked access.",
+                isPhishing: true,
+                explanation: "Phishing! Real IT helpdesks will NEVER ask you to email or submit your current password via a form."
+            }
+        ];
+
+        let currentQuestionIdx = 0;
+        let userScore = 0;
+
+        function initQuiz() {
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const container = document.getElementById('quiz-container');
+            const q = quizQuestions[currentQuestionIdx];
+
+            if (currentQuestionIdx >= quizQuestions.length) {
+                container.innerHTML = `
+                    <div class="text-center py-8 space-y-4">
+                        <i data-lucide="award" class="w-16 h-16 text-cyber-primary mx-auto"></i>
+                        <h3 class="text-2xl font-bold text-white">Phishing Lab Completed!</h3>
+                        <p class="text-slate-400 font-mono">Final Score: <strong class="text-cyber-success">${userScore} / ${quizQuestions.length}</strong></p>
+                        <button onclick="resetQuiz()" class="px-6 py-2.5 bg-cyber-primary text-slate-950 font-bold rounded-xl text-sm">Retake Quiz</button>
+                    </div>
+                `;
+                // Update Dashboard stats
+                document.getElementById('stat-phishing-score').innerText = `${userScore} / ${quizQuestions.length}`;
+                document.getElementById('stat-phishing-label').innerText = 'Verified IQ Score';
+                document.getElementById('stat-phishing-bar').style.width = `${(userScore / quizQuestions.length) * 100}%`;
+                lucide.createIcons();
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="bg-slate-900/80 rounded-xl border border-slate-800 p-6 space-y-4 font-mono">
+                    <div class="flex justify-between text-xs text-slate-500 border-b border-slate-800 pb-2">
+                        <span>Email Sample #${currentQuestionIdx + 1} of ${quizQuestions.length}</span>
+                        <span>Analyze Details Carefully</span>
+                    </div>
+
+                    <div class="space-y-1 text-xs text-slate-300">
+                        <div><strong>From:</strong> <span class="text-cyber-warning">${escapeHTML(q.sender)}</span></div>
+                        <div><strong>Subject:</strong> <span class="text-white">${escapeHTML(q.subject)}</span></div>
+                    </div>
+
+                    <div class="p-4 bg-slate-950 rounded-lg border border-slate-800 text-xs text-slate-300 leading-relaxed italic">
+                        "${escapeHTML(q.body)}"
+                    </div>
+
+                    <div id="quiz-options" class="flex flex-col sm:flex-row gap-4 pt-4">
+                        <button onclick="answerQuiz(true)" class="flex-1 py-3 bg-cyber-danger/10 hover:bg-cyber-danger/20 border border-cyber-danger/40 text-cyber-danger font-bold rounded-xl text-sm transition-all flex items-center justify-center space-x-2">
+                            <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                            <span>Flag as Phishing Scam</span>
+                        </button>
+                        <button onclick="answerQuiz(false)" class="flex-1 py-3 bg-cyber-success/10 hover:bg-cyber-success/20 border border-cyber-success/40 text-cyber-success font-bold rounded-xl text-sm transition-all flex items-center justify-center space-x-2">
+                            <i data-lucide="shield-check" class="w-4 h-4"></i>
+                            <span>Legitimate Email</span>
+                        </button>
+                    </div>
+
+                    <div id="quiz-feedback" class="hidden p-4 rounded-xl text-xs space-y-2 mt-4"></div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function answerQuiz(userThinksPhishing) {
+            const q = quizQuestions[currentQuestionIdx];
+            const feedback = document.getElementById('quiz-feedback');
+            const options = document.getElementById('quiz-options');
+            
+            options.classList.add('pointer-events-none', 'opacity-50');
+            feedback.classList.remove('hidden');
+
+            const isCorrect = userThinksPhishing === q.isPhishing;
+            if (isCorrect) userScore++;
+
+            document.getElementById('quiz-score').innerText = `${userScore} / ${quizQuestions.length}`;
+
+            feedback.className = isCorrect ? 
+                "p-4 rounded-xl border bg-cyber-success/10 border-cyber-success/40 text-cyber-success space-y-2 block" :
+                "p-4 rounded-xl border bg-cyber-danger/10 border-cyber-danger/40 text-cyber-danger space-y-2 block";
+
+            feedback.innerHTML = `
+                <div class="font-bold text-sm flex items-center space-x-2">
+                    <i data-lucide="${isCorrect ? 'check-circle' : 'x-circle'}" class="w-5 h-5"></i>
+                    <span>${isCorrect ? 'Correct Analysis!' : 'Incorrect Assessment'}</span>
+                </div>
+                <p class="text-slate-300 leading-relaxed">${q.explanation}</p>
+                <button onclick="nextQuestion()" class="mt-2 px-4 py-2 bg-slate-800 text-white rounded-lg text-xs font-bold hover:bg-slate-700">Next Scenario &rarr;</button>
+            `;
+            lucide.createIcons();
+        }
+
+        function nextQuestion() {
+            currentQuestionIdx++;
+            renderQuestion();
+        }
+
+        function resetQuiz() {
+            currentQuestionIdx = 0;
+            userScore = 0;
+            document.getElementById('quiz-score').innerText = `0 / ${quizQuestions.length}`;
+            renderQuestion();
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+    </script>
+</body>
+</html>
